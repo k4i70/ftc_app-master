@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -61,6 +62,10 @@ public class BasicOpMode_Iterative_ extends OpMode
     private DcMotor rightDrive = null;
     private DcMotor leftDrive_2 = null;
     private DcMotor rightDrive_2 = null;
+    private DcMotor elbowJoint = null;
+    private DcMotor wristJoint = null;
+    private Servo finger = null;
+    private Servo finger2 = null;
 
 
     /*
@@ -77,6 +82,10 @@ public class BasicOpMode_Iterative_ extends OpMode
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive_2");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive_2");
+        elbowJoint = hardwareMap.get (DcMotor.class, "elbowJoint");
+        wristJoint = hardwareMap.get (DcMotor.class, "wristJoint");
+        finger = hardwareMap.get(Servo.class, "finger");
+        finger = hardwareMap.get(Servo.class, "finger2");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -84,6 +93,9 @@ public class BasicOpMode_Iterative_ extends OpMode
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
         leftDrive_2.setDirection(DcMotor.Direction.FORWARD);
         rightDrive_2.setDirection(DcMotor.Direction.FORWARD);
+        elbowJoint.setDirection(DcMotor.Direction.FORWARD);
+        wristJoint.setDirection(DcMotor.Direction.FORWARD);
+        finger.setDirection(Servo.Direction.FORWARD);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -112,6 +124,9 @@ public class BasicOpMode_Iterative_ extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftPower;
         double rightPower;
+        double elbowPower;
+        double wristPower;
+        double fingerPower;
 
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
@@ -123,6 +138,12 @@ public class BasicOpMode_Iterative_ extends OpMode
         leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
         rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
+        elbowPower   = Range.clip(gamepad2.right_stick_y, -1, 1);
+        wristPower   = Range.clip(gamepad2.left_stick_y, -1, 1);
+
+        fingerPower  = Range.clip(gamepad2.right_trigger, 0, 1);
+        fingerPower  = Range.clip(-gamepad2.left_trigger, -1, 1);
+
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
         // leftPower  = -gamepad1.left_stick_y ;
@@ -131,6 +152,9 @@ public class BasicOpMode_Iterative_ extends OpMode
         // Send calculated power to wheels
         leftDrive.setPower(leftPower);
         rightDrive.setPower(rightPower);
+        elbowJoint.setPower(elbowPower);
+        wristJoint.setPower(wristPower);
+        finger.setPosition(fingerPower);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
