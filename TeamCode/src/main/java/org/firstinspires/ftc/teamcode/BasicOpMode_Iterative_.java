@@ -60,14 +60,14 @@ public class BasicOpMode_Iterative_ extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private Servo finger2 = null;
+
+
     private DcMotor leftDrive_2 = null;
     private DcMotor rightDrive_2 = null;
     private DcMotor elbowJoint = null;
     private DcMotor wristJoint = null;
     private Servo finger = null;
-    private Servo finger2 = null;
-
-
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -78,10 +78,10 @@ public class BasicOpMode_Iterative_ extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive_2");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive_2");
+        leftDrive  = hardwareMap.get(DcMotor.class, "leftDrive");
+        rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
+        leftDrive  = hardwareMap.get(DcMotor.class, "leftDrive_2");
+        rightDrive = hardwareMap.get(DcMotor.class, "rightDrive_2");
         elbowJoint = hardwareMap.get (DcMotor.class, "elbowJoint");
         wristJoint = hardwareMap.get (DcMotor.class, "wristJoint");
         finger = hardwareMap.get(Servo.class, "finger");
@@ -89,14 +89,14 @@ public class BasicOpMode_Iterative_ extends OpMode
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        /*leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDrive_2.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive_2.setDirection(DcMotor.Direction.REVERSE);
         rightDrive_2.setDirection(DcMotor.Direction.FORWARD);
         elbowJoint.setDirection(DcMotor.Direction.FORWARD);
         wristJoint.setDirection(DcMotor.Direction.FORWARD);
         finger.setDirection(Servo.Direction.FORWARD);
-
+*/
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
@@ -153,8 +153,8 @@ public class BasicOpMode_Iterative_ extends OpMode
         leftDrive.setPower(leftPower);
         rightDrive.setPower(rightPower);
         elbowJoint.setPower(elbowPower);
-        wristJoint.setPower(wristPower);
-        finger.setPosition(fingerPower);
+        wristJoint.setPower(wristPower/2);
+        finger.setPosition(fingerPower/4);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
